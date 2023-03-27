@@ -11,13 +11,21 @@ const initialState = {
 };
 
 export const getBook = createAsyncThunk("counter/getBook", async (state) => {
-  const res = await api.get(`/books/${state.bookId}`);
-  return res.data;
+  try {
+    const res = await api.get(`/books/${state.bookId}`);
+    return res.data;
+  } catch (error) {
+    toast.error(error?.message);
+  }
 });
 export const postBook = createAsyncThunk("counter/postBook", async (state) => {
   if (!state.addingBookRedux) return;
-  await api.post(`/favorites`, state.addingBookRedux);
-  toast.success("The book has been added to the reading list!");
+  try {
+    await api.post(`/favorites`, state.addingBookRedux);
+    toast.success("The book has been added to the reading list!");
+  } catch (error) {
+    toast.error(error?.message);
+  }
 });
 
 export const bookDetailSlice = createSlice({
@@ -48,7 +56,7 @@ export const bookDetailSlice = createSlice({
       .addCase(getBook.rejected, (state, action) => {
         state.status = "failed";
         state.loading = false;
-        toast.error(action.error?.message);
+        // toast.error(action.error?.message);
       });
 
     builder
@@ -65,7 +73,7 @@ export const bookDetailSlice = createSlice({
       .addCase(postBook.rejected, (state, action) => {
         state.status = "failed";
         state.loading = false;
-        toast.error(action.error?.message);
+        // toast.error(action.error?.message);
       });
   },
 });
