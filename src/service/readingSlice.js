@@ -52,11 +52,10 @@ export const readingSlice = createSlice({
         state.status = "idle";
         state.books = action.payload;
         state.loading = false;
-        console.log(state.books);
       })
       .addCase(getReadingList.rejected, (state, action) => {
         state.status = "failed";
-        state.error = action.error.message;
+        toast.error(action.error.message);
       });
 
     builder
@@ -68,12 +67,10 @@ export const readingSlice = createSlice({
         state.status = "idle";
         state.removedBookId = "";
         state.loading = false;
-        console.log(state.books);
       })
       .addCase(removeReadingList.rejected, (state, action) => {
         state.status = "failed";
-        state.error = action.error.message;
-        toast.error(state.error);
+        toast.error(action.error.message);
       });
   },
 });

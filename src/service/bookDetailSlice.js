@@ -5,14 +5,13 @@ import { toast } from "react-toastify";
 const initialState = {
   loading: false,
   book: null,
-  addingBook: false,
+  addingBook: null,
   status: "idle",
   error: "",
 };
 
 export const getBook = createAsyncThunk("counter/getBook", async (state) => {
   const res = await api.get(`/books/${state.bookId}`);
-  console.log(res.data);
   return res.data;
 });
 export const postBook = createAsyncThunk("counter/postBook", async (state) => {
@@ -39,31 +38,34 @@ export const bookDetailSlice = createSlice({
     builder
       .addCase(getBook.pending, (state) => {
         state.status = "loading";
+        state.loading = true;
       })
       .addCase(getBook.fulfilled, (state, action) => {
         state.status = "idle";
         state.book = action.payload;
-        console.log(state.book);
+        state.loading = false;
       })
       .addCase(getBook.rejected, (state, action) => {
         state.status = "failed";
-        state.error = action.error.message;
+        state.loading = false;
+        toast.error(action.error?.message);
       });
 
     builder
-      .addCase(postBook.pending, (state) => {
+      .addCase(postBook.pending, (state, action) => {
         state.status = "loading";
+        state.loading = true;
+        console.log(action);
       })
       .addCase(postBook.fulfilled, (state, action) => {
         state.status = "idle";
-        console.log(action);
         state.addingBook = action.payload;
-        // console.log(state.book);
+        state.loading = false;
       })
       .addCase(postBook.rejected, (state, action) => {
         state.status = "failed";
-        state.error = action.error.message;
-        toast.error(state.error);
+        state.loading = false;
+        toast.error(action.error?.message);
       });
   },
 });

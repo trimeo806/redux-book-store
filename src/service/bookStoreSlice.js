@@ -16,7 +16,6 @@ export const getBooks = createAsyncThunk("counter/getBooks", async (state) => {
   if (state.queryRedux) {
     url += `&q=${state.queryRedux}`;
   }
-  console.log(state);
   const res = await api.get(url);
   return res.data;
 });
